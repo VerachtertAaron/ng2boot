@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  ng2boot-rest:
+    build: .
+    ports:
+      - "8080"
+    depends_on:
+      - "postgres"
+    networks:
+      - default
+
+  postgres:
+    restart: always
+    image: postgres
+    environment:
+      - POSTGRES_USER=ng2boot
+      - POSTGRES_PASSWORD=ng2boot
+      - POSTGRES_DB=ng2boot
+    ports:
+      - '5432'
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
