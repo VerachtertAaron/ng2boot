@@ -22,4 +22,17 @@ public class SmurfAssemblerTest {
         assertThat(smurfR).isEqualTo(expectedSmurfR);
     }
 
+    @Test
+    public void canAssembleASmurfEntityFromASmurfRepresentation() throws Exception {
+        LocalDate now = LocalDate.now();
+        SmurfR smurfR = SmurfRTestBuilder.aDefaultSmurfR().withCreationDate(now).build();
+        Smurf smurf = SmurfAssembler.toDomain(smurfR);
+
+        Smurf expectedSmurf = SmurfTestBuilder.aSmurf()
+                .withName(SmurfTestBuilder.NAME)
+                .withCreationDate(now)
+                .build();
+
+        assertThat(smurf).isEqualTo(expectedSmurf);
+    }
 }

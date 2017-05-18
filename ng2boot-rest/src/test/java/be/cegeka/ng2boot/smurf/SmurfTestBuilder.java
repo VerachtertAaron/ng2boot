@@ -7,11 +7,9 @@ import java.time.LocalDate;
 public class SmurfTestBuilder {
 
     public static final String NAME = "SnoreSmurf";
-    public static final String USER_ID = "665";
 
     private Long id;
     private String name;
-    private String userId;
     private LocalDate creationDate;
 
     public static SmurfTestBuilder aSmurf() {
@@ -22,7 +20,6 @@ public class SmurfTestBuilder {
         return new SmurfTestBuilder()
                 .withoutId()
                 .withName(NAME)
-                .withUserId(USER_ID)
                 .withCreationDate(LocalDate.now());
     }
 
@@ -31,7 +28,6 @@ public class SmurfTestBuilder {
 
     public Smurf build() {
         Smurf smurf = Smurf.SmurfBuilder.aSmurf()
-                .withUserId(userId)
                 .withName(name)
                 .withCreationDate(creationDate)
                 .build();
@@ -54,11 +50,6 @@ public class SmurfTestBuilder {
 
     public SmurfTestBuilder withName(String name) {
         this.name = name;
-        return this;
-    }
-
-    public SmurfTestBuilder withUserId(String userId) {
-        this.userId = userId;
         return this;
     }
 

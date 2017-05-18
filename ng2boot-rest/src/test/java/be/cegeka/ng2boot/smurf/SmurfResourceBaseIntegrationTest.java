@@ -10,13 +10,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 
 import static be.cegeka.ng2boot.jaxrs.test.ResponseAssertions.assertThat;
+import static be.cegeka.ng2boot.smurf.SmurfRTestBuilder.aDefaultSmurfR;
 import static java.time.LocalDate.now;
 import static javax.ws.rs.core.Response.Status.OK;
 
@@ -56,6 +59,19 @@ public class SmurfResourceBaseIntegrationTest {
 
         ResponseAssertions.assertThat(response).hasStatus(OK);
         Assertions.assertThat(response.readEntity(SmurfR[].class)).containsOnly(expectedSmurf);
+    }
+
+    @Test
+    public void create() {
+        LocalDate creationDate = now();
+        SmurfR smurfR = aDefaultSmurfR()
+                .withCreationDate(creationDate).build();
+
+        Response response = smurfResource.create(smurfR);
+
+        assertThat(repo.findAll()).contains(SmurfTestBuilder.aDefaultSmurf()
+        .withCreationDate(creationDate).build());
+        ResponseAssertions.assertThat(response).hasStatus(OK);
     }
 
 }

@@ -3,6 +3,9 @@ package be.cegeka.ng2boot.smurf;
 import java.time.LocalDate;
 
 public class SmurfRTestBuilder {
+
+    public static final String NAME = "SnoreSmurf";
+
     private long id;
     private String name;
     private LocalDate creationDate;
@@ -12,6 +15,12 @@ public class SmurfRTestBuilder {
 
     public static SmurfRTestBuilder aSmurfR() {
         return new SmurfRTestBuilder();
+    }
+
+    public static SmurfRTestBuilder aDefaultSmurfR() {
+        return aSmurfR()
+                .withName(NAME)
+                .withCreationDate(LocalDate.now());
     }
 
     public SmurfR build() {
