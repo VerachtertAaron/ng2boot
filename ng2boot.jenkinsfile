@@ -1,6 +1,6 @@
 node('commit-stage') {
     try {
-        def ng2boot_github_url = 'git@github.com:sch3lp/ng2-springboot.git'
+        def ng2boot_github_url = 'git@github.com:DavidOpDeBeeck/ng2boot.git'
         def ui_dir = 'ng2boot-ui'
         def rest_dir = 'ng2boot-rest'
         stage('Checkout'){

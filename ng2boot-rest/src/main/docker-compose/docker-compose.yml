@@ -2,7 +2,7 @@ version: '2'
 
 services:
   ng2boot-rest:
-    build: .
+    build: /
     ports:
       - "8080"
     depends_on:
