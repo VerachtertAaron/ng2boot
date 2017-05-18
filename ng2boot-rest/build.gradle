@@ -51,8 +51,7 @@ dependencies {
     compile("org.hibernate:hibernate-java8:5.0.0.Final") //LocalDateTime hibernate converters
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.6.1") //to automatically deserialize LocalDateTimes etc.
 
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion") //excluded to package into .war, but still able to run locally standalone
-
+    runtime("org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion")
     runtime 'org.postgresql:postgresql:9.4-1206-jdbc42'
 
     testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
