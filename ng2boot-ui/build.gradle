@@ -1,19 +1,23 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 apply plugin: 'idea'
-apply plugin: 'war'
 apply plugin: 'com.moowork.node'
+apply plugin: 'war'
 
 buildscript {
     repositories {
+        mavenLocal()
         mavenCentral()
         jcenter() // gradle-node-plugin is released on JFrog
     }
 
     dependencies {
         classpath "com.moowork.gradle:gradle-node-plugin:0.13"
+        classpath 'com.cegeka.gradle:docker-build:1.0'
     }
 }
+
+apply plugin: 'com.cegeka.gradle.docker-build'
 
 idea {
     module {
@@ -48,7 +52,7 @@ npmInstall {
     outputs.upToDateWhen {false} // trick gradle into always running npm install to add new dependencies
 }
 
-assemble.finalizedBy 'ngBuildProd'
+war.dependsOn 'ngBuildProd'
 
 test.dependsOn 'ngTest'
 

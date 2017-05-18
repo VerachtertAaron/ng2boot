@@ -10,13 +10,11 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
         classpath 'com.cegeka.gradle:docker-build:1.0'
-        classpath 'com.cegeka.gradle:docker-compose:1.0'
     }
 }
 
 apply plugin: 'org.springframework.boot'
 apply plugin: 'com.cegeka.gradle.docker-build'
-apply plugin: 'com.cegeka.gradle.docker-compose'
 
 configurations {
     providedRuntime
