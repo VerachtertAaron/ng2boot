@@ -53,7 +53,7 @@ dependencies {
 
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion") //excluded to package into .war, but still able to run locally standalone
 
-    // runtime 'com.oracle.jdbc:ojdbc6:11.2.0.4' //switch with whatever database jdbc driver you require
+    runtime 'org.postgresql:postgresql:9.4-1206-jdbc42'
 
     testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
     testCompile("junit:junit:4.12")
