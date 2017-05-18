@@ -1,10 +1,10 @@
-import { SrcPage } from './app.po';
+import { Ng2bootUiPage } from './app.po';
 
-describe('src App', function() {
-  let page: SrcPage;
+describe('ng2boot-ui App', () => {
+  let page: Ng2bootUiPage;
 
   beforeEach(() => {
-    page = new SrcPage();
+    page = new Ng2bootUiPage();
   });
 
   it('should display message saying app works', () => {
