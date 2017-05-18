@@ -69,3 +69,7 @@ test {
     }
     systemProperty "spring.profiles.active", project.findProperty("springProfile") //so you can pass a profile so springboot test runtime can use environment specific database
 }
+
+bootRun {
+    args = ["--spring.profiles.active=dev"]
+}
