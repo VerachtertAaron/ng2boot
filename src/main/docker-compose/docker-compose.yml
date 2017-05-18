@@ -2,13 +2,20 @@ version: '2'
 
 services:
   ng2boot-rest:
-    build: /
+    image: @project-ng2boot-rest@
     ports:
       - "8080"
     depends_on:
       - "postgres"
     networks:
       - default
+
+  ng2boot-ui:
+    image: @project-ng2boot-ui@
+    ports:
+      - "8000"
+    depends_on:
+      - "ng2boot-rest"
 
   postgres:
     restart: always
