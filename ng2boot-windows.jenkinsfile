@@ -15,52 +15,51 @@ node {
                                                 ]]
                     ]
             )
-            sh "chmod a+x gradlew"
         }
 
 
         stage('Clean REST') {
-            sh "./gradlew ng2boot-rest:clean"
+            bat "gradlew ng2boot-rest:clean"
         }
 
-        stage('Build REST') {
-            sh "./gradlew ng2boot-rest:assemble"
-        }
+//        stage('Build REST') {
+//            bat "gradlew ng2boot-rest:assemble"
+//        }
 
         stage('Test REST') {
             try {
-                sh "./gradlew ng2boot-rest:test"
+                bat "gradlew ng2boot-rest:test"
             } finally {
                 step([$class: "JUnitResultArchiver", testResults: "**/build/**/TEST-*.xml"])
             }
         }
 
         stage('Build Docker image REST'){
-            sh "./gradlew ng2boot-rest:buildDockerImage"
+            bat "gradlew ng2boot-rest:buildDockerImage"
         }
 
         stage('Clean UI') {
-            sh "./gradlew ng2boot-ui:clean"
+            bat "gradlew ng2boot-ui:clean"
         }
 
-        stage('Build UI') {
-            sh "./gradlew ng2boot-ui:assemble"
-        }
+//        stage('Build UI') {
+//            bat "gradlew ng2boot-ui:assemble"
+//        }
 
         //stage('Test UI') {
         //    try {
-        //        sh "./gradlew ng2boot-ui:ngTest"
+        //        bat "./gradlew ng2boot-ui:ngTest"
         //    } finally {
         //        step([$class: "JUnitResultArchiver", testResults: "**/build/**/TESTS-*.xml"])
         //    }
         //}
 
         stage('Build Docker image UI'){
-            sh "./gradlew ng2boot-ui:buildDockerImage"
+            bat "gradlew ng2boot-ui:buildDockerImage"
         }
 
         stage('Docker compose up'){
-            sh "./gradlew dockerComposeUp"
+            bat "gradlew dockerComposeUp"
         }
     } catch (err) {
         currentBuild.result = 'FAILURE'
