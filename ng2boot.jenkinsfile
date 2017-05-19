@@ -1,6 +1,6 @@
 node {
     try {
-        def ng2boot_github_url = 'git@github.com:DavidOpDeBeeck/ng2boot.git'
+        def ng2boot_github_url = 'https://github.com/DavidOpDeBeeck/ng2boot.git'
         stage('Checkout'){
             checkout(
                     changelog: true,
