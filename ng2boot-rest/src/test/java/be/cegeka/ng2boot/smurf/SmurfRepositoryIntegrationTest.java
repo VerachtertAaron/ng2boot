@@ -45,7 +45,6 @@ public class SmurfRepositoryIntegrationTest {
 
         Smurf smurf = repository.findOne(persistedSmurf.getId());
 
-        assertThat(smurf.getId()).isEqualTo(persistedSmurf.getId());
         assertThat(smurf.getName()).isEqualTo(SmurfTestBuilder.NAME);
         assertThat(smurf.getCreationDate()).isEqualTo(creationDate);
     }

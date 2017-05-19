@@ -17,6 +17,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
+import java.util.List;
 
 import static be.cegeka.ng2boot.jaxrs.test.ResponseAssertions.assertThat;
 import static be.cegeka.ng2boot.smurf.SmurfRTestBuilder.aDefaultSmurfR;
@@ -69,8 +70,10 @@ public class SmurfResourceBaseIntegrationTest {
 
         Response response = smurfResource.create(smurfR);
 
-        assertThat(repo.findAll()).contains(SmurfTestBuilder.aDefaultSmurf()
-        .withCreationDate(creationDate).build());
+        List<Smurf> smurfs = repo.findAll();
+        assertThat(smurfs).hasSize(1);
+        Smurf smurf = smurfs.get(0);
+        assertThat(smurf.getCreationDate()).isEqualTo(creationDate);
         ResponseAssertions.assertThat(response).hasStatus(OK);
     }
 
