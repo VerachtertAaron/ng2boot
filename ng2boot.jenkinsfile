@@ -35,6 +35,10 @@ node {
             }
         }
 
+        stage('Build Docker image REST'){
+            sh "./gradlew ng2boot-rest:buildDockerImage"
+        }
+
         stage('Clean UI') {
             sh "./gradlew ng2boot-ui:clean"
         }
@@ -50,6 +54,14 @@ node {
         //        step([$class: "JUnitResultArchiver", testResults: "**/build/**/TESTS-*.xml"])
         //    }
         //}
+
+        stage('Build Docker image UI'){
+            sh "./gradlew ng2boot-ui:buildDockerImage"
+        }
+
+        stage('Docker compose up'){
+            sh "./gradlew dockerComposeUp"
+        }
     } catch (err) {
         currentBuild.result = 'FAILURE'
         step([$class: 'ClaimPublisher'])
