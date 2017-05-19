@@ -9,8 +9,7 @@ node {
                             $class           : 'GitSCM',
                             branches         : [[name: '*/master']],
                             userRemoteConfigs: [[
-                                                        credentialsId: 'github_jenkins_key',
-                                                        url          : ng2boot_github_url
+                                                        url : ng2boot_github_url
                                                 ]]
                     ]
             )
