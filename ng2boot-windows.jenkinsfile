@@ -22,9 +22,9 @@ node {
             bat "gradlew ng2boot-rest:clean"
         }
 
-        stage('Build REST') {
-            bat "gradlew ng2boot-rest:assemble"
-        }
+//        stage('Build REST') {
+//            bat "gradlew ng2boot-rest:assemble"
+//        }
 
         stage('Test REST') {
             try {
@@ -42,9 +42,9 @@ node {
             bat "gradlew ng2boot-ui:clean"
         }
 
-        stage('Build UI') {
-            bat "gradlew ng2boot-ui:assemble"
-        }
+//        stage('Build UI') {
+//            bat "gradlew ng2boot-ui:assemble"
+//        }
 
         //stage('Test UI') {
         //    try {
