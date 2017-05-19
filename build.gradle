@@ -10,10 +10,6 @@ buildscript {
 
 apply plugin: 'com.cegeka.gradle.docker-compose'
 
-dockerCompose {
-    tokens = new HashMap<String, String>()
-}
-
 allprojects {
 	repositories {
 		mavenLocal()
@@ -22,17 +18,6 @@ allprojects {
 }
 
 subprojects {
-	apply plugin: 'java'
-	apply plugin: 'com.cegeka.gradle.docker-build'
-
 	group ng2bootGroup
 	version ng2bootVersion
-
-	dockerBuild {
-        tokens = [version: ng2bootVersion]
-		registry = ng2bootGroup
-	}
-
-	sourceCompatibility = 1.8
-	targetCompatibility = 1.8
 }

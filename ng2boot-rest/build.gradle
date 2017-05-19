@@ -12,11 +12,20 @@ buildscript {
     }
 }
 
+apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'com.cegeka.gradle.docker-build'
+
+dockerBuild {
+    registry = project.group
+}
 
 configurations {
     providedRuntime
 }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
     repositories {
