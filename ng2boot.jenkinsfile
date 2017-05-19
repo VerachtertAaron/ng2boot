@@ -1,8 +1,6 @@
-node('commit-stage') {
+node {
     try {
         def ng2boot_github_url = 'git@github.com:DavidOpDeBeeck/ng2boot.git'
-        def ui_dir = 'ng2boot-ui'
-        def rest_dir = 'ng2boot-rest'
         stage('Checkout'){
             checkout(
                     changelog: true,
@@ -19,26 +17,38 @@ node('commit-stage') {
             sh "chmod a+x gradlew"
         }
 
-        stage('Build UI') {
-            try {
-                sh "./gradlew -b $ui_dir/build.gradle clean npmInstall check"
-            } finally {
-                step([$class: "JUnitResultArchiver", testResults: "**/build/**/TESTS-*.xml"])
-            }
+
+        stage('Clean REST') {
+            sh "./gradlew ng2boot-rest:clean"
         }
 
         stage('Build REST') {
+            sh "./gradlew ng2boot-rest:assemble"
+        }
+
+        stage('Test REST') {
             try {
-                sh "./gradlew -b $rest_dir/build.gradle clean check -PspringProfile=jenkins$EXECUTOR_NUMBER"
+                sh "./gradlew ng2boot-rest:test"
             } finally {
                 step([$class: "JUnitResultArchiver", testResults: "**/build/**/TEST-*.xml"])
             }
         }
-        
-        stage('Package EAR') {
-            sh "./gradlew assemble"
+
+        stage('Clean UI') {
+            sh "./gradlew ng2boot-ui:clean"
         }
 
+        stage('Build UI') {
+            sh "./gradlew ng2boot-ui:assemble"
+        }
+
+        stage('Test UI') {
+            try {
+                sh "./gradlew ng2boot-ui:ngTest"
+            } finally {
+                step([$class: "JUnitResultArchiver", testResults: "**/build/**/TESTS-*.xml"])
+            }
+        }
     } catch (err) {
         currentBuild.result = 'FAILURE'
         step([$class: 'ClaimPublisher'])
