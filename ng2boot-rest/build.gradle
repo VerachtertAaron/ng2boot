@@ -61,7 +61,7 @@ dependencies {
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.6.1") //to automatically deserialize LocalDateTimes etc.
 
     runtime("org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion")
-    runtime 'org.postgresql:postgresql:9.4-1206-jdbc42'
+    runtime files("${projectDir}/lib/ojdbc6.jar")
 
     testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
     testCompile("junit:junit:4.12")

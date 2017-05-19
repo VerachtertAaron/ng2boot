@@ -5,8 +5,6 @@ services:
     image: @project-ng2boot-rest@
     ports:
       - "8080:8080"
-    depends_on:
-      - "postgres"
     networks:
       - default
 
@@ -16,19 +14,3 @@ services:
       - "8000:8000"
     depends_on:
       - "ng2boot-rest"
-
-  postgres:
-    restart: always
-    image: postgres
-    environment:
-      - POSTGRES_USER=ng2boot
-      - POSTGRES_PASSWORD=ng2boot
-      - POSTGRES_DB=ng2boot
-    ports:
-      - '5432'
-    networks:
-      - default
-
-networks:
-  default:
-    driver: bridge
