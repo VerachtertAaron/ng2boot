@@ -18,6 +18,32 @@ allprojects {
 }
 
 subprojects {
+	def nexusUrl = "$nexusHost:$nexusPort"
+	def imageName = "$ng2bootGroup/$project.name:$ng2bootVersion"
+	def nexusImageUrl = "$nexusUrl/$imageName"
+
 	group ng2bootGroup
 	version ng2bootVersion
+
+	task tagInNexus(type:Exec) {
+		commandLine 'docker', 'tag', "$imageName", "$nexusImageUrl"
+	}
+
+	task pushToNexus(type:Exec) {
+		commandLine 'docker', 'push', "$nexusImageUrl"
+	}
+
+	pushToNexus.dependsOn tagInNexus
+}
+
+task pushAllImagesToNexus(type: GradleBuild)  {
+	doFirst {
+
+		def tasksToRun = []
+		project.subprojects { project ->
+			tasksToRun << ":$project.name:pushToNexus".toString()
+		};
+
+		tasks = tasksToRun
+	}
 }
