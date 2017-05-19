@@ -1,9 +1,6 @@
 package be.cegeka.ng2boot.smurf;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -16,6 +13,8 @@ public class Smurf {
     }
 
     @Id
+    @SequenceGenerator(name="id_sequence", allocationSize=1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="id_sequence")
     @Column(name = "ID")
     private long id;
 
