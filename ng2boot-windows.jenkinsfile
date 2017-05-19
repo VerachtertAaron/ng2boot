@@ -34,10 +34,6 @@ node {
             }
         }
 
-        stage('Build Docker image REST'){
-            bat "gradlew ng2boot-rest:buildDockerImage"
-        }
-
         stage('Clean UI') {
             bat "gradlew ng2boot-ui:clean"
         }
@@ -53,10 +49,6 @@ node {
         //        step([$class: "JUnitResultArchiver", testResults: "**/build/**/TESTS-*.xml"])
         //    }
         //}
-
-        stage('Build Docker image UI'){
-            bat "gradlew ng2boot-ui:buildDockerImage"
-        }
 
         stage('Docker compose up'){
             bat "gradlew dockerComposeUp"
