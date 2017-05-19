@@ -1,0 +1,68 @@
+#!groovy
+
+node {
+    try {
+        def ng2boot_github_url = 'https://github.com/DavidOpDeBeeck/ng2boot.git'
+        stage('Checkout'){
+            checkout(
+                    changelog: true,
+                    poll: true,
+                    scm: [
+                            $class           : 'GitSCM',
+                            branches         : [[name: '*/master']],
+                            userRemoteConfigs: [[
+                                                        url : ng2boot_github_url
+                                                ]]
+                    ]
+            )
+        }
+
+
+        stage('Clean REST') {
+            bat "gradlew ng2boot-rest:clean"
+        }
+
+        stage('Build REST') {
+            bat "gradlew ng2boot-rest:assemble"
+        }
+
+        stage('Test REST') {
+            try {
+                bat "gradlew ng2boot-rest:test"
+            } finally {
+                step([$class: "JUnitResultArchiver", testResults: "**/build/**/TEST-*.xml"])
+            }
+        }
+
+        stage('Build Docker image REST'){
+            bat "gradlew ng2boot-rest:buildDockerImage"
+        }
+
+        stage('Clean UI') {
+            bat "gradlew ng2boot-ui:clean"
+        }
+
+        stage('Build UI') {
+            bat "gradlew ng2boot-ui:assemble"
+        }
+
+        //stage('Test UI') {
+        //    try {
+        //        bat "./gradlew ng2boot-ui:ngTest"
+        //    } finally {
+        //        step([$class: "JUnitResultArchiver", testResults: "**/build/**/TESTS-*.xml"])
+        //    }
+        //}
+
+        stage('Build Docker image UI'){
+            bat "gradlew ng2boot-ui:buildDockerImage"
+        }
+
+        stage('Docker compose up'){
+            bat "gradlew dockerComposeUp"
+        }
+    } catch (err) {
+        currentBuild.result = 'FAILURE'
+        step([$class: 'ClaimPublisher'])
+    }
+}
