@@ -38,12 +38,28 @@ subprojects {
 
 task pushAllImagesToNexus(type: GradleBuild)  {
 	doFirst {
-
 		def tasksToRun = []
 		project.subprojects { project ->
 			tasksToRun << ":$project.name:pushToNexus".toString()
 		};
-
 		tasks = tasksToRun
 	}
+}
+
+task bumpVersion {
+	Properties props = new Properties()
+	File propsFile = new File('gradle.properties')
+
+	props.load(propsFile.newDataInputStream())
+
+	def version = props.getProperty('ng2bootVersion')
+	def buildIndex = version.indexOf('b')
+
+	def versionWithoutBuild = version.substring(0, buildIndex - 1)
+
+	def buildNumber = version.substring(buildIndex + 1, version.length())
+	def newBuildNumber = Integer.parseInt(buildNumber) + 1
+
+	props.setProperty('ng2bootVersion', "$versionWithoutBuild-b$newBuildNumber")
+	props.store(propsFile.newWriter(), null)
 }
