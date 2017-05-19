@@ -55,13 +55,13 @@ node {
         }
 
 
-        stage('Upload to nexus'){
-            bat "gradlew pushAllImagesToNexus"
-        }
-
-        stage('Bump version'){
-            bat "gradlew bumpVersion"
-        }
+//        stage('Upload to nexus'){
+//            bat "gradlew clean pushAllImagesToNexus"
+//        }
+//
+//        stage('Bump version'){
+//            bat "gradlew bumpVersion"
+//        }
     } catch (ignore) {
         currentBuild.result = 'FAILURE'
         step([$class: 'ClaimPublisher'])
