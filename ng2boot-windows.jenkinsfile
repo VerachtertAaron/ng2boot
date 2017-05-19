@@ -53,7 +53,16 @@ node {
         stage('Docker compose up'){
             bat "gradlew dockerComposeUp"
         }
-    } catch (err) {
+
+
+        stage('Upload to nexus'){
+            bat "gradlew pushAllImagesToNexus"
+        }
+
+        stage('Bump version'){
+            bat "gradlew bumpVersion"
+        }
+    } catch (ignore) {
         currentBuild.result = 'FAILURE'
         step([$class: 'ClaimPublisher'])
     }
