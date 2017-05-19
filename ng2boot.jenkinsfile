@@ -1,3 +1,5 @@
+#!groovy
+
 node {
     try {
         def ng2boot_github_url = 'https://github.com/DavidOpDeBeeck/ng2boot.git'
@@ -41,13 +43,13 @@ node {
             sh "./gradlew ng2boot-ui:assemble"
         }
 
-        stage('Test UI') {
+        /*stage('Test UI') {
             try {
                 sh "./gradlew ng2boot-ui:ngTest"
             } finally {
                 step([$class: "JUnitResultArchiver", testResults: "**/build/**/TESTS-*.xml"])
             }
-        }
+        }*/
     } catch (err) {
         currentBuild.result = 'FAILURE'
         step([$class: 'ClaimPublisher'])
