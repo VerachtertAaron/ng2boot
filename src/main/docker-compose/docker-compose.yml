@@ -4,7 +4,7 @@ services:
   ng2boot-rest:
     image: @project-ng2boot-rest@
     ports:
-      - "8080"
+      - "8080:8080"
     depends_on:
       - "postgres"
     networks:
@@ -13,7 +13,7 @@ services:
   ng2boot-ui:
     image: @project-ng2boot-ui@
     ports:
-      - "8000"
+      - "8000:8000"
     depends_on:
       - "ng2boot-rest"
 

@@ -1,5 +1,7 @@
 package be.cegeka.ng2boot.smurf;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -12,6 +14,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Produces(APPLICATION_JSON_UTF8_VALUE)
 @Consumes(APPLICATION_JSON_UTF8_VALUE)
 @Path(SMURF_BASE_URL)
+@CrossOrigin
 public class SmurfResourceBase implements SmurfResource {
 
     @Inject
