@@ -43,13 +43,13 @@ node {
             sh "./gradlew ng2boot-ui:assemble"
         }
 
-        /*stage('Test UI') {
-            try {
-                sh "./gradlew ng2boot-ui:ngTest"
-            } finally {
-                step([$class: "JUnitResultArchiver", testResults: "**/build/**/TESTS-*.xml"])
-            }
-        }*/
+        //stage('Test UI') {
+        //    try {
+        //        sh "./gradlew ng2boot-ui:ngTest"
+        //    } finally {
+        //        step([$class: "JUnitResultArchiver", testResults: "**/build/**/TESTS-*.xml"])
+        //    }
+        //}
     } catch (err) {
         currentBuild.result = 'FAILURE'
         step([$class: 'ClaimPublisher'])
