@@ -1,0 +1,8 @@
+gradlePlugin {
+    plugins {
+        manageVersionPlugin {
+            id = "com.cegeka.gradle.manage-version"
+            implementationClass = "com.cegeka.gradle.ManageVersionPlugin"
+        }
+    }
+}
