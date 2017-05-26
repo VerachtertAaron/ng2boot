@@ -1,13 +1,5 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
-    }
-
-    dependencies {
-        classpath "com.moowork.gradle:gradle-node-plugin:0.13"
-    }
+plugins {
+    id 'com.moowork.node' version '0.13'
 }
 
 task assemble(type: Copy) {
@@ -15,13 +7,8 @@ task assemble(type: Copy) {
     into 'build/docker/libs'
 }
 
-apply plugin: 'idea'
-apply plugin: 'com.moowork.node'
 apply plugin: 'com.cegeka.gradle.docker-build'
-
-dockerBuild {
-    registry = project.group
-}
+apply plugin: 'com.cegeka.gradle.docker-nexus'
 
 idea {
     module {
@@ -44,14 +31,15 @@ npmInstall {
 }
 
 task ngTest(type: NpmTask) {
+    dependsOn npmInstall
     workingDir = file('./src')
     args = ['run', 'ngSingleTest']
 }
 
 task ngBuildProd(type: NpmTask) {
+    dependsOn npmInstall
     workingDir = file('./src')
     args = ['run', 'buildProd']
 }
 
-ngBuildProd.dependsOn 'npmInstall'
 assemble.dependsOn 'ngBuildProd'
