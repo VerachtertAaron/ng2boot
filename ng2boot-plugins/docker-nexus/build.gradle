@@ -1,0 +1,12 @@
+dependencies {
+    testCompile 'com.cegeka.gradle:docker-build:1.0'
+}
+
+gradlePlugin {
+    plugins {
+        dockerNexusPlugin {
+            id = "com.cegeka.gradle.docker-nexus"
+            implementationClass = "com.cegeka.gradle.DockerNexusPlugin"
+        }
+    }
+}
