@@ -1,69 +1,48 @@
 #!groovy
 
-node {
-    try {
-        def ng2boot_github_url = 'https://github.com/DavidOpDeBeeck/ng2boot.git'
-        stage('Checkout'){
-            checkout(
-                    changelog: true,
-                    poll: true,
-                    scm: [
-                            $class           : 'GitSCM',
-                            branches         : [[name: '*/master']],
-                            userRemoteConfigs: [[
-                                                        url : ng2boot_github_url
-                                                ]]
-                    ]
-            )
+def gitUrl = 'git@github.com:DavidOpDeBeeck/ng2boot.git'
+def gitBranch = 'cleanup'
+def gitCredentials = 'GitHub'
+def gitCommitterName = 'Jenkins'
+def gitCommitterEmail = 'Jenkins'
+
+try {
+    stage('Checkout') {
+        node {
+            git branch: gitBranch, credentialsId: gitCredentials, url: gitUrl
         }
+    }
 
-
-        stage('Clean REST') {
-            bat "gradlew ng2boot-rest:clean"
-        }
-
-//        stage('Build REST') {
-//            bat "gradlew ng2boot-rest:assemble"
-//        }
-
-        stage('Test REST') {
+    stage('Web API Test') {
+        node {
             try {
-                bat "gradlew ng2boot-rest:test"
+                bat "./gradlew ng2boot-rest:clean"
+                bat "./gradlew ng2boot-rest:test"
             } finally {
-                step([$class: "JUnitResultArchiver", testResults: "**/build/**/TEST-*.xml"])
+                junit '**/build/**/TEST-*.xml'
             }
         }
+    }
 
-        stage('Clean UI') {
-            bat "gradlew ng2boot-ui:clean"
+    stage('UI Test') {
+        node {
+            bat "./gradlew ng2boot-ui:clean"
+            bat "./gradlew ng2boot-ui:ngTest"
         }
+    }
 
-//        stage('Build UI') {
-//            bat "gradlew ng2boot-ui:assemble"
-//        }
+    stage('Tag Version') {
+        node {
 
-        //stage('Test UI') {
-        //    try {
-        //        bat "./gradlew ng2boot-ui:ngTest"
-        //    } finally {
-        //        step([$class: "JUnitResultArchiver", testResults: "**/build/**/TESTS-*.xml"])
-        //    }
-        //}
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: gitCredentials, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
 
-        stage('Docker compose up'){
-            bat "gradlew dockerComposeUp"
+                bat "./gradlew tagBumpAndPushVersion -Pusername=$GIT_USERNAME -Ppassword=$GIT_PASSWORD -PversionIndex=PATCH -Pbranch=$gitBranch -PcommitterName=$gitCommitterName -PcommitterEmail=$gitCommitterEmail"
+            }
         }
-
-
-//        stage('Upload to nexus'){
-//            bat "gradlew clean pushAllImagesToNexus"
-//        }
-//
-//        stage('Bump version'){
-//            bat "gradlew bumpVersion"
-//        }
-    } catch (ignore) {
+    }
+} catch (exception) {
+    node {
+        println exception
         currentBuild.result = 'FAILURE'
-        step([$class: 'ClaimPublisher'])
     }
 }

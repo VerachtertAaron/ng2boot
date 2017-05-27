@@ -1,69 +1,48 @@
 #!groovy
 
-node {
-    try {
-        def ng2boot_github_url = 'https://github.com/DavidOpDeBeeck/ng2boot.git'
-        stage('Checkout'){
-            checkout(
-                    changelog: true,
-                    poll: true,
-                    scm: [
-                            $class           : 'GitSCM',
-                            branches         : [[name: '*/master']],
-                            userRemoteConfigs: [[
-                                                        url : ng2boot_github_url
-                                                ]]
-                    ]
-            )
-            sh "chmod a+x gradlew"
+def gitUrl = 'git@github.com:DavidOpDeBeeck/ng2boot.git'
+def gitBranch = 'cleanup'
+def gitCredentials = 'GitHub'
+def gitCommitterName = 'Jenkins'
+def gitCommitterEmail = 'Jenkins'
+
+try {
+    stage('Checkout') {
+        node {
+            git branch: gitBranch, credentialsId: gitCredentials, url: gitUrl
         }
+    }
 
-
-        stage('Clean REST') {
-            sh "./gradlew ng2boot-rest:clean"
-        }
-
-        stage('Build REST') {
-            sh "./gradlew ng2boot-rest:assemble"
-        }
-
-        stage('Test REST') {
+    stage('Web API Test') {
+        node {
             try {
+                sh "./gradlew ng2boot-rest:clean"
                 sh "./gradlew ng2boot-rest:test"
             } finally {
-                step([$class: "JUnitResultArchiver", testResults: "**/build/**/TEST-*.xml"])
+                junit '**/build/**/TEST-*.xml'
             }
         }
+    }
 
-        stage('Build Docker image REST'){
-            sh "./gradlew ng2boot-rest:buildDockerImage"
-        }
-
-        stage('Clean UI') {
+    stage('UI Test') {
+        node {
             sh "./gradlew ng2boot-ui:clean"
+            sh "./gradlew ng2boot-ui:ngTest"
         }
+    }
 
-        stage('Build UI') {
-            sh "./gradlew ng2boot-ui:assemble"
+    stage('Tag Version') {
+        node {
+
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: gitCredentials, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+
+                sh "./gradlew tagBumpAndPushVersion -Pusername=$GIT_USERNAME -Ppassword=$GIT_PASSWORD -PversionIndex=PATCH -Pbranch=$gitBranch -PcommitterName=$gitCommitterName -PcommitterEmail=$gitCommitterEmail"
+            }
         }
-
-        //stage('Test UI') {
-        //    try {
-        //        sh "./gradlew ng2boot-ui:ngTest"
-        //    } finally {
-        //        step([$class: "JUnitResultArchiver", testResults: "**/build/**/TESTS-*.xml"])
-        //    }
-        //}
-
-        stage('Build Docker image UI'){
-            sh "./gradlew ng2boot-ui:buildDockerImage"
-        }
-
-        stage('Docker compose up'){
-            sh "./gradlew dockerComposeUp"
-        }
-    } catch (err) {
+    }
+} catch (exception) {
+    node {
+        println exception
         currentBuild.result = 'FAILURE'
-        step([$class: 'ClaimPublisher'])
     }
 }
