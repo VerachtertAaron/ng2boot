@@ -4,7 +4,5 @@ include "ng2boot-rest"
 include "ng2boot-ui"
 include 'ng2boot-plugins'
 include 'ng2boot-plugins:docker-nexus'
-findProject(':ng2boot-plugins:docker-nexus')?.name = 'docker-nexus'
 include 'ng2boot-plugins:manage-version'
-findProject(':ng2boot-plugins:manage-version')?.name = 'manage-version'
 

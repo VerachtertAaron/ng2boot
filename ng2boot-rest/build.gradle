@@ -1,7 +1,4 @@
-plugins {
-    id 'org.springframework.boot' version '1.5.3.RELEASE'
-}
-
+apply plugin: 'org.springframework.boot'
 apply plugin: 'com.cegeka.gradle.docker-build'
 apply plugin: 'com.cegeka.gradle.docker-nexus'
 
@@ -34,8 +31,8 @@ dependencies {
 
 test {
     reports {
-        junitXml.enabled = true
         html.enabled = false
+        junitXml.enabled = true
     }
     systemProperty "spring.profiles.active", project.findProperty("springProfile")
 }

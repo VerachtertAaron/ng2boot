@@ -1,14 +1,21 @@
-plugins {
-    id 'com.moowork.node' version '0.13'
-}
-
+// The Docker build plugin needs an assemble task
 task assemble(type: Copy) {
     from 'src/dist'
     into 'build/docker/libs'
 }
 
+apply plugin: 'com.moowork.node'
 apply plugin: 'com.cegeka.gradle.docker-build'
 apply plugin: 'com.cegeka.gradle.docker-nexus'
+
+dockerBuild {
+    registry = "$project.group"
+}
+
+dockerNexus {
+    nexusHost = "$project.ext.nexusHost"
+    nexusPort = "$project.ext.nexusPort"
+}
 
 idea {
     module {
@@ -19,10 +26,10 @@ idea {
 
 node {
     version = '7.2.0'
-    distBaseUrl = 'https://nodejs.org/dist'
     download = true
-    workDir = file("${project.buildDir}/nodejs")
-    nodeModulesDir = file("${project.projectDir}")
+    distBaseUrl = 'https://nodejs.org/dist'
+    workDir = file("$project.buildDir/nodejs")
+    nodeModulesDir = file("$project.projectDir")
 }
 
 npmInstall {
