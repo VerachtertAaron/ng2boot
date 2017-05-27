@@ -56,11 +56,6 @@ class ManageVersionPlugin implements Plugin<Project> {
                 def newVersion = bumpVersion(VersionIndex.valueOf(versionIndex))
 
                 Git.open(project.projectDir)
-                        .add()
-                        .addFilepattern(PROPERTY_FILE_PATH)
-                        .call()
-
-                Git.open(project.projectDir)
                         .commit()
                         .setMessage("Prepare new version v" + newVersion)
                         .call()
