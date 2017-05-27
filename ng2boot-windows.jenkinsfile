@@ -3,8 +3,6 @@
 def gitUrl = 'git@github.com:DavidOpDeBeeck/ng2boot.git'
 def gitBranch = 'cleanup'
 def gitCredentials = 'GitHub'
-def gitCommitterName = 'Jenkins'
-def gitCommitterEmail = 'Jenkins'
 
 try {
     stage('Checkout') {
@@ -28,16 +26,6 @@ try {
         node {
             bat "./gradlew ng2boot-ui:clean"
             bat "./gradlew ng2boot-ui:ngTest"
-        }
-    }
-
-    stage('Tag Version') {
-        node {
-
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: gitCredentials, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-
-                bat "./gradlew tagBumpAndPushVersion -Pusername=$GIT_USERNAME -Ppassword=$GIT_PASSWORD -PversionIndex=PATCH -Pbranch=$gitBranch -PcommitterName=$gitCommitterName -PcommitterEmail=$gitCommitterEmail"
-            }
         }
     }
 } catch (exception) {

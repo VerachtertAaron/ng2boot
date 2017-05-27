@@ -1,24 +1,8 @@
-buildscript {
-	repositories {
-		mavenLocal()
-		mavenCentral()
-	}
-	dependencies {
-		classpath 'com.cegeka.gradle:docker-build:1.0'
-		classpath 'com.cegeka.gradle:docker-nexus:1.0'
-		classpath 'com.cegeka.gradle:docker-compose:1.0'
-		classpath 'com.cegeka.gradle:manage-version:1.0'
-	}
-}
-
 plugins {
     id 'com.moowork.node' version '0.13' apply false
     id 'org.springframework.boot' version '1.5.3.RELEASE' apply false
     id 'io.spring.dependency-management' version '1.0.2.RELEASE' apply false
 }
-
-apply plugin: 'com.cegeka.gradle.manage-version'
-apply plugin: 'com.cegeka.gradle.docker-compose'
 
 project.ext {
     javaProjects = subprojects.findAll {
@@ -28,11 +12,6 @@ project.ext {
 
 subprojects {
     apply plugin: 'idea'
-
-    ext {
-        nexusHost = "$nexusHost"
-        nexusPort = "$nexusPort"
-    }
 
     group applicationGroup
     version applicationVersion

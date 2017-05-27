@@ -1,21 +1,4 @@
-// The Docker build plugin needs an assemble task
-task assemble(type: Copy) {
-    from 'src/dist'
-    into 'build/docker/libs'
-}
-
 apply plugin: 'com.moowork.node'
-apply plugin: 'com.cegeka.gradle.docker-build'
-apply plugin: 'com.cegeka.gradle.docker-nexus'
-
-dockerBuild {
-    registry = "$project.group"
-}
-
-dockerNexus {
-    nexusHost = "$project.ext.nexusHost"
-    nexusPort = "$project.ext.nexusPort"
-}
 
 idea {
     module {
@@ -48,5 +31,3 @@ task ngBuildProd(type: NpmTask) {
     workingDir = file('./src')
     args = ['run', 'buildProd']
 }
-
-assemble.dependsOn 'ngBuildProd'

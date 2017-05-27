@@ -1,21 +1,11 @@
 apply plugin: 'org.springframework.boot'
-apply plugin: 'com.cegeka.gradle.docker-build'
-apply plugin: 'com.cegeka.gradle.docker-nexus'
-
-dockerBuild {
-    registry = "$project.group"
-}
-
-dockerNexus {
-    nexusHost = "$project.ext.nexusHost"
-    nexusPort = "$project.ext.nexusPort"
-}
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-jersey'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.hibernate:hibernate-java8'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    compile 'com.h2database:h2'
 
     runtime 'org.springframework.boot:spring-boot-starter-tomcat'
     runtime 'org.postgresql:postgresql'
