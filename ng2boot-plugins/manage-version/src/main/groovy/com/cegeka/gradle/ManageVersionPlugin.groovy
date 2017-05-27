@@ -13,7 +13,7 @@ class ManageVersionPlugin implements Plugin<Project> {
     private static final String BUMP_MAJOR_TASK_NAME = 'bumpMajorVersion'
     private static final String BUMP_MINOR_TASK_NAME = 'bumpMinorVersion'
     private static final String BUMP_PATCH_TASK_NAME = 'bumpPatchVersion'
-    private static final String BUMP_TAG_PUSH_TASK_NAME = 'bumpTagAndPushVersion'
+    private static final String TAG_BUMP_PUSH_TASK_NAME = 'tagBumpAndPushVersion'
 
     enum VersionIndex {
         MAJOR, MINOR, PATCH
@@ -38,12 +38,15 @@ class ManageVersionPlugin implements Plugin<Project> {
     }
 
     private void addTagAndPushVersionTask(Project project) {
-        project.task(BUMP_TAG_PUSH_TASK_NAME) {
+        project.task(TAG_BUMP_PUSH_TASK_NAME) {
             group 'Manage Version'
 
             doLast {
                 def username = project.properties.get("username")
                 def password = project.properties.get("password")
+                def branch = project.properties.get("branch")
+                def committerName = project.properties.get("committerName")
+                def committerEmail = project.properties.get("committerEmail")
                 def versionIndex = project.properties.get("versionIndex")
                 def oldVersion = getCurrentVersion()
 
@@ -51,12 +54,19 @@ class ManageVersionPlugin implements Plugin<Project> {
                         .tag()
                         .setName("v" + oldVersion)
                         .setMessage("Release v" + oldVersion)
+                        .setForceUpdate(true)
                         .call()
 
                 def newVersion = bumpVersion(VersionIndex.valueOf(versionIndex))
 
                 Git.open(project.projectDir)
+                        .add()
+                        .addFilepattern(PROPERTY_FILE_PATH)
+                        .call()
+
+                Git.open(project.projectDir)
                         .commit()
+                        .setCommitter(committerName, committerEmail)
                         .setMessage("Prepare new version v" + newVersion)
                         .call()
 
@@ -64,6 +74,7 @@ class ManageVersionPlugin implements Plugin<Project> {
                         .push()
                         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
                         .setPushTags()
+                        .add(branch)
                         .call()
             }
         }
